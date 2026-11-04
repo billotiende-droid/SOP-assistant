@@ -45,7 +45,18 @@ def retrieve_sections(
         score = len(overlap) / len(question_terms)
 
         if score >= threshold:
-            score.append((score, section))
+            scored.append((score, section))
+
+#Highest relevance first; stable ordering for ties
+    scored.sort(
+        key=lambda item:(
+            -item[0],
+            item[1].document_id,
+            item[1].section,
+        )
+    )
+
+    return [section for _, section in scored[:limit]]
 
     
 
