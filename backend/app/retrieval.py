@@ -26,6 +26,27 @@ def retrieve_sections(
         limit: int = 3,
 ) -> list[SopSection]:
 
+    question_terms = tokenize(question)
+
+    if not question_terms:
+        return []
+
+    scored = []
+
+    for section in sections:
+        searchable_text = (
+            f"{section.section} {section.title} {section.content}"
+        )
+
+        section_terms = tokenize(searchable_text)
+        overlap = question_terms & section_terms
+
+        # how much of the questions meaningful vocabulary matches?
+        score = len(overlap) / len(question_terms)
+
+        if score >= threshold:
+            score.append((score, section))
+
     
 
 
